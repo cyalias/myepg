@@ -142,6 +142,7 @@ func downloadxml(urlpath string) error {
 		}
 		return nil
 	}
+	//重试
 	err := backoff.RetryNotify(
 		operation,
 		backoff.WithMaxRetries(backoff.NewExponentialBackOff(), 2),
@@ -151,9 +152,6 @@ func downloadxml(urlpath string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	//重试
-
 	return nil
 }
 
