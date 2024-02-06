@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/beevik/etree"
+	"github.com/cenkalti/backoff/v4"
 )
 
 var data_list []map[string]string
@@ -89,28 +90,8 @@ func RedXml(file string) {
 
 		}
 		data_list = append(data_list, iptv_dict2)
-
 	}
-	// for i, v := range data_list {
-	// 	fmt.Printf("索引：%d, 值：%s\n", i, v)
-	// }
-
 }
-
-// func Make_values() (datalist []map[string]string) {
-// 	for i := range data_list {
-// 		//fmt.Println(data_list[i])
-// 		//fmt.Println(data_list[i]["chid"])
-// 		a := data_list[i]["chid"]
-// 		for j := range data_list1 {
-// 			if data_list1[j]["Channel_id"] == a {
-// 				data_list[i]["chid"] = data_list1[j]["Channel_name"]
-// 			}
-// 		}
-// 		//fmt.Printf("索引：%d, 值：%s\n", i, v)
-// 	}
-// 	return datalist
-// }
 
 func Make_values() {
 	Liststr = nil
@@ -121,34 +102,59 @@ func Make_values() {
 				data_list[i]["chid"] = data_list1[j]["Channel_name"]
 			}
 		}
-		//fmt.Printf("索引：%d, 值：%s\n", i, v)
 	}
 	Liststr = data_list
 
 }
 
-func downloadxml(urlpath string) {
-	resp, err := http.Get(urlpath)
-	if err != nil {
-		//log.Fatalf("无法获取文件： %v", err)
-		fmt.Printf("无法获取文件：%v", err)
+func downloadxml(urlpath string) error {
+	operation := func() error {
+		resp, err := http.Get(urlpath)
+		if err != nil {
+			//log.Fatalf("无法获取文件： %v", err)
+			fmt.Printf("无法获取文件：%v", err)
+			return err
+		}
+		//defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
+
+		// 创建文件用于保存
+		filename := path.Base(urlpath)
+		flags := os.O_CREATE | os.O_WRONLY
+		f, err := os.OpenFile(filename, flags, 0666)
+		if err != nil {
+			fmt.Println("创建文件失败")
+			//log.Fatal("err")
+			fmt.Printf("创建文件失败: %v", err)
+			return err
+		}
+		//defer f.Close()
+		defer func() {
+			_ = f.Close()
+		}()
+		// 将响应流和文件流对接起来
+		_, err = io.Copy(f, resp.Body)
+		if err != nil {
+			log.Fatal("err")
+			return err
+		}
+		return nil
 	}
-	defer resp.Body.Close()
-	// 创建文件用于保存
-	filename := path.Base(urlpath)
-	flags := os.O_CREATE | os.O_WRONLY
-	f, err := os.OpenFile(filename, flags, 0666)
+	err := backoff.RetryNotify(
+		operation,
+		backoff.WithMaxRetries(backoff.NewExponentialBackOff(), 2),
+		func(err error, duration time.Duration) {
+			log.Printf("failed err:%s,and it will be executed again in %v", err.Error(), duration)
+		})
 	if err != nil {
-		fmt.Println("创建文件失败")
-		//log.Fatal("err")
-		fmt.Printf("创建文件失败: %v", err)
+		log.Fatal(err)
 	}
-	defer f.Close()
-	// 将响应流和文件流对接起来
-	_, err = io.Copy(f, resp.Body)
-	if err != nil {
-		log.Fatal("err")
-	}
+
+	//重试
+
+	return nil
 }
 
 func do() {
