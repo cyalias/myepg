@@ -20,11 +20,11 @@ type Datalist struct {
 }
 
 type Epg_data struct {
-	Datestr  string `json:"date"`
-	Ch       string `json:"channel_name"`
-	Url      string `json:"url"`
-	Epg_data []Datalist
-	Success  string `json:"success"`
+	Datestr  string     `json:"date"`
+	Ch       string     `json:"channel_name"`
+	Url      string     `json:"url"`
+	Epg_data []Datalist `json:"epg_data"`
+	Success  string     `json:"success"`
 }
 
 func iso8601_uni(iso8601Time string) (t string) {
@@ -84,29 +84,6 @@ func Api_Handler(w http.ResponseWriter, r *http.Request) {
 		data.Success = "Failed"
 		data.Epg_data = nil
 	}
-
-	// datas := Datalist{
-	// 	Start: "20240209170000 +0800",
-	// 	Desc:  "desc:none",
-	// 	End:   "20240209185959 +0800",
-	// 	Title: "title:none",
-	// }
-	// data.Epg_data = append(data.Epg_data, datas)
-
-	//fmt.Println(Liststr)
-	// for _, v := range Liststr {
-
-	// 	if strings.ToLower(v["chid"]) == strings.ToLower(ch) {
-	// 		//fmt.Printf("索引：%d, 值: %s\n", i, v)
-	// 		datas := Datalist{
-	// 			Start: v["startstr"],
-	// 			Desc:  v["desc"],
-	// 			End:   v["stopstr"],
-	// 			Title: v["title"],
-	// 		}
-	// 		data.Epg_data = append(data.Epg_data, datas)
-	// 	}
-	// }
 	response, err := json.Marshal(data)
 	if err != nil {
 		log.Fatal(err)

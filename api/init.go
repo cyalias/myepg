@@ -29,6 +29,8 @@ func shijian(customTime string) (tstr string) {
 }
 
 func RedXml(file string) {
+	data_list1 = nil
+	data_list = nil
 	doc := etree.NewDocument()
 	if err := doc.ReadFromFile(file); err != nil {
 		fmt.Println(err)
@@ -111,9 +113,8 @@ func RedXml(file string) {
 // }
 
 func Make_values() {
+	Liststr = nil
 	for i := range data_list {
-		//fmt.Println(data_list[i])
-		//fmt.Println(data_list[i]["chid"])
 		a := data_list[i]["chid"]
 		for j := range data_list1 {
 			if data_list1[j]["Channel_id"] == a {
@@ -123,15 +124,14 @@ func Make_values() {
 		//fmt.Printf("索引：%d, 值：%s\n", i, v)
 	}
 	Liststr = data_list
-	// for i, v := range Liststr {
-	// 	fmt.Printf("索引：%d, 值：%s\n", i, v)
-	// }
+
 }
 
 func downloadxml(urlpath string) {
 	resp, err := http.Get(urlpath)
 	if err != nil {
-		log.Fatalf("无法获取文件： %v", err)
+		//log.Fatalf("无法获取文件： %v", err)
+		fmt.Printf("无法获取文件：%v", err)
 	}
 	defer resp.Body.Close()
 	// 创建文件用于保存
@@ -140,7 +140,8 @@ func downloadxml(urlpath string) {
 	f, err := os.OpenFile(filename, flags, 0666)
 	if err != nil {
 		fmt.Println("创建文件失败")
-		log.Fatal("err")
+		//log.Fatal("err")
+		fmt.Printf("创建文件失败: %v", err)
 	}
 	defer f.Close()
 	// 将响应流和文件流对接起来
@@ -150,26 +151,9 @@ func downloadxml(urlpath string) {
 	}
 }
 
-func init() {
-	do()
-	// downloadxml("https://epg.erw.cc/all.xml")
-	// RedXml("all.xml")
-	// Make_values()
-
-	//定时
-	// ticker := time.NewTicker(1 * time.Minute)
-	// defer ticker.Stop()
-
-	// for range ticker.C {
-	// 	downloadxml("https://epg.erw.cc/all.xml")
-	// 	RedXml("all.xml")
-	// 	Make_values()
-	// }
-}
-
 func do() {
 	t := time.Now()
-	next := time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute()+1, 0, 0, SysTimeLocation)
+	next := time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute()+10, 0, 0, SysTimeLocation)
 	fmt.Printf("next  type: %T,\t val: %v\n", next, next)
 	//获取下次执行时间与当前时间的差
 	duration := next.Sub(time.Now())
@@ -181,4 +165,8 @@ func do() {
 	downloadxml("https://epg.erw.cc/all.xml")
 	RedXml("all.xml")
 	Make_values()
+}
+
+func init() {
+	do()
 }
