@@ -32,7 +32,6 @@ func iso8601_uni(iso8601Time string) (t string) {
 	//如果错误则退出
 	if err != nil {
 		fmt.Println(err)
-		//return -1
 	}
 	timestr := fmt.Sprintf("%02d", result.Hour()) + ":" + fmt.Sprintf("%02d", result.Minute())
 	return timestr
@@ -43,7 +42,6 @@ func teshu(iso8601Time string) (t string) {
 	//如果错误则退出
 	if err != nil {
 		fmt.Println(err)
-		//return -1
 	}
 	timestr := strconv.Itoa(result.Year()) + "-" + fmt.Sprintf("%02d", result.Month()) + "-" + fmt.Sprintf("%02d", result.Day())
 	return timestr
@@ -69,7 +67,6 @@ func Api_Handler(w http.ResponseWriter, r *http.Request) {
 		for _, v := range Liststr {
 
 			if strings.ToLower(v["chid"]) == strings.ToLower(ch) && teshu(v["startstr"]) == datestr {
-				//fmt.Printf("索引：%d, 值: %s\n", i, v)
 				datas := Datalist{
 					Start: iso8601_uni(v["startstr"]),
 					Desc:  v["desc"],

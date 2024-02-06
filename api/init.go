@@ -41,16 +41,14 @@ func RedXml(file string) {
 	//fmt.Println("Root element:", root.Tag)
 
 	for _, channels := range root.SelectElements("channel") {
-		//fmt.Println("channel element:", channels.Tag)
+
 		iptv_dict1 := make(map[string]string)
 		Channel_id := channels.SelectAttrValue("id", "unknown")
-		//fmt.Printf("Channel_name:%s,", Channel_id)
 		iptv_dict1["Channel_id"] = Channel_id
+
 		if disp_name := channels.SelectElement("display-name"); disp_name != nil {
-			//lang := disp_name.SelectAttrValue("lang", "unknown")
+
 			Channel_name := disp_name.Text()
-			//fmt.Printf("display_name:%s \n", lang)
-			//iptv_dict1["lang"] = lang
 			iptv_dict1["Channel_name"] = Channel_name
 		}
 		data_list1 = append(data_list1, iptv_dict1)
@@ -61,17 +59,13 @@ func RedXml(file string) {
 		startstr := programmes.SelectAttrValue("start", "none")
 		stopstr := programmes.SelectAttrValue("stop", "none")
 		chid := programmes.SelectAttrValue("channel", "none")
-		//fmt.Printf("start:%s,", startstr)
-		//fmt.Printf("stop:%s,", stopstr)
-		//fmt.Printf("ch:%s,", chid)
+
 		iptv_dict2["startstr"] = shijian(startstr)
 		iptv_dict2["stopstr"] = shijian(stopstr)
 		iptv_dict2["chid"] = chid
 
 		if titlestr := programmes.SelectElement("title"); titlestr != nil {
 			title := titlestr.Text()
-			//lang := titlestr.SelectAttrValue("lang", "unknown")
-			//fmt.Printf("title:%s,", titlestr.Text())
 			if title != "" {
 				iptv_dict2["title"] = title
 			} else {
@@ -81,7 +75,6 @@ func RedXml(file string) {
 		}
 		if descstr := programmes.SelectElement("desc"); descstr != nil {
 			desc := descstr.Text()
-			//fmt.Printf("desc:%s,", desc)
 			if desc != "" {
 				iptv_dict2["desc"] = desc
 			} else {
@@ -142,7 +135,7 @@ func downloadxml(urlpath string) error {
 		}
 		return nil
 	}
-	//重试
+	//重试  https://www.jianshu.com/p/435364fc51ce
 	err := backoff.RetryNotify(
 		operation,
 		backoff.WithMaxRetries(backoff.NewExponentialBackOff(), 2),
