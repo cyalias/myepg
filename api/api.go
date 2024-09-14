@@ -66,7 +66,9 @@ func Api_Handler(w http.ResponseWriter, r *http.Request) {
 		data.Success = "Success"
 		for _, v := range Liststr {
 
-			if strings.ToLower(v["chid"]) == strings.ToLower(ch) && teshu(v["startstr"]) == datestr {
+			//if strings.ToLower(v["ch"]) == strings.ToLower(ch) && teshu(v["startstr"]) == datestr {
+			if strings.EqualFold(v["chid"], ch) && teshu(v["startstr"]) == datestr {
+				//fmt.Println(ch + v["title"])
 				datas := Datalist{
 					Start: iso8601_uni(v["startstr"]),
 					Desc:  v["desc"],

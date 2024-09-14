@@ -12,10 +12,10 @@ import (
 
 	"github.com/beevik/etree"
 	"github.com/cenkalti/backoff/v4"
+	"github.com/robfig/cron/v3"
 )
 
 var data_list []map[string]string
-var data_list1 []map[string]string
 
 var SysTimeLocation, _ = time.LoadLocation("Asia/Chongqing")
 
@@ -30,7 +30,6 @@ func shijian(customTime string) (tstr string) {
 }
 
 func RedXml(file string) {
-	data_list1 = nil
 	data_list = nil
 	doc := etree.NewDocument()
 	if err := doc.ReadFromFile(file); err != nil {
@@ -39,30 +38,32 @@ func RedXml(file string) {
 
 	root := doc.SelectElement("tv")
 	//fmt.Println("Root element:", root.Tag)
-
+	iptv_dict1 := make(map[string]string)
 	for _, channels := range root.SelectElements("channel") {
 
-		iptv_dict1 := make(map[string]string)
 		Channel_id := channels.SelectAttrValue("id", "unknown")
-		iptv_dict1["Channel_id"] = Channel_id
+		//iptv_dict1["Channel_id"] = Channel_id
 
 		if disp_name := channels.SelectElement("display-name"); disp_name != nil {
 
 			Channel_name := disp_name.Text()
-			iptv_dict1["Channel_name"] = Channel_name
+			//iptv_dict1["Channel_name"] = Channel_name
+			iptv_dict1[Channel_id] = Channel_name
 		}
-		data_list1 = append(data_list1, iptv_dict1)
+
 	}
+	//fmt.Println(iptv_dict1)
 
 	for _, programmes := range root.SelectElements("programme") {
 		iptv_dict2 := make(map[string]string)
 		startstr := programmes.SelectAttrValue("start", "none")
 		stopstr := programmes.SelectAttrValue("stop", "none")
 		chid := programmes.SelectAttrValue("channel", "none")
-
+		//fmt.Println(chid)
 		iptv_dict2["startstr"] = shijian(startstr)
 		iptv_dict2["stopstr"] = shijian(stopstr)
-		iptv_dict2["chid"] = chid
+		iptv_dict2["chid"] = iptv_dict1[chid]
+		//fmt.Print(iptv_dict2["ch"])
 
 		if titlestr := programmes.SelectElement("title"); titlestr != nil {
 			title := titlestr.Text()
@@ -82,22 +83,12 @@ func RedXml(file string) {
 			}
 
 		}
+		//fmt.Println(chid, startstr, stopstr, iptv_dict2["title"], iptv_dict2["desc"])
 		data_list = append(data_list, iptv_dict2)
 	}
-}
-
-func Make_values() {
+	//fmt.Println(data_list)
 	Liststr = nil
-	for i := range data_list {
-		a := data_list[i]["chid"]
-		for j := range data_list1 {
-			if data_list1[j]["Channel_id"] == a {
-				data_list[i]["chid"] = data_list1[j]["Channel_name"]
-			}
-		}
-	}
 	Liststr = data_list
-
 }
 
 func downloadxml(urlpath string) error {
@@ -149,21 +140,16 @@ func downloadxml(urlpath string) error {
 }
 
 func do() {
-	t := time.Now()
-	next := time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute()+10, 0, 0, SysTimeLocation)
-	fmt.Printf("next  type: %T,\t val: %v\n", next, next)
-	//获取下次执行时间与当前时间的差
-	duration := next.Sub(time.Now())
-	fmt.Printf("duration  type: %T,\t val: %v\n", duration, duration)
-	/*预约下次执行执行计划，因为在程序初始化的时候已经调用了do()方法，
-	*在do()每次执行完，都会再预约下次执行计划，直到主程序die*/
-	time.AfterFunc(duration, do)
-	fmt.Println("****")
-	downloadxml("https://epg.erw.cc/all.xml")
-	RedXml("all.xml")
-	Make_values()
+	c := cron.New()
+	c.AddFunc("0 0 * * *", func() {
+		downloadxml("https://e.erw.cc/e.xml")
+		RedXml("e.xml")
+	})
+	c.Start()
+
 }
 
 func init() {
 	do()
+	RedXml("e.xml")
 }
