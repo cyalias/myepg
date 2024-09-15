@@ -62,10 +62,11 @@ WorkingDirectory=/opt/mypeg
 WantedBy=multi-user.target
 ```
 设置好之后执行如下命令:
+```
 systemctl daemon-reload
 systemctl start mypeg.service
 systemctl status mypeg.service
 systemctl enable mypeg.service
-
+```
 ### 问题
 - 还得继续学习优化
