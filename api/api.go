@@ -54,6 +54,7 @@ func teshu(iso8601Time string) (t string) {
 		fmt.Println(err)
 	}
 	timestr := strconv.Itoa(result.Year()) + "-" + fmt.Sprintf("%02d", result.Month()) + "-" + fmt.Sprintf("%02d", result.Day())
+	//fmt.Println(timestr)
 	return timestr
 }
 

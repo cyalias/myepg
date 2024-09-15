@@ -142,15 +142,21 @@ func downloadxml(urlpath string) error {
 func do() {
 	c := cron.New()
 	c.AddFunc("0 2 * * *", func() {
-		downloadxml("https://gitee.com/Black_crow/xmlgz/raw/master/all.xml")
+		downloadxml("https://e.erw.cc/all.xml")
 		//https://gitee.com/Black_crow/xmlgz/raw/master/e.xml
 		RedXml("all.xml")
 	})
 	c.Start()
-
+	if _, err := os.Stat("all.xml"); err == nil {
+		fmt.Printf("File exists\n")
+		RedXml("all.xml")
+	} else {
+		fmt.Printf("File does not exist\n")
+		downloadxml("https://e.erw.cc/all.xml")
+		RedXml("all.xml")
+	}
 }
 
 func init() {
 	do()
-	RedXml("all.xml")
 }
