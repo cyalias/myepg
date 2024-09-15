@@ -57,6 +57,7 @@ After=redis.service
 [Service]
 Type=simple
 ExecStart=/opt/mypeg/mypeg
+WorkingDirectory=/opt/mypeg
 [Install]
 WantedBy=multi-user.target
 ```
