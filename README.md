@@ -41,6 +41,29 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go
 # mac编译windows执行文件
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
 ```
+# linux做成服务
+/etc/systemd/system/mypeg.service
+
+```
+[Unit]
+Description=Mypeg (my)
+After=syslog.target
+After=network.target
+After=mysqld.service
+After=postgresql.service
+After=memcached.service
+After=redis.service
+[Service]
+Type=simple
+ExecStart=/opt/mypeg/mypeg
+[Install]
+WantedBy=multi-user.target
+```
+设置好之后执行如下命令:
+systemctl daemon-reload
+systemctl start mypeg.service
+systemctl status mypeg.service
+systemctl enable mypeg.service
 
 ### 问题
 - 还得继续学习优化
