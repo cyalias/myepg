@@ -142,6 +142,7 @@ func downloadxml(urlpath string) error {
 func do() {
 	urlpath := "https://e.erw.cc/all.xml"
 	//urlpath := "https://epg.pw/xmltv/epg_CN.xml"
+	//urlpath := "https://epg.mxdyeah.top/download/all-mxdyeah.xml"
 	filename := path.Base(urlpath)
 	c := cron.New()
 	c.AddFunc("1 0,13 * * *", func() {
