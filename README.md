@@ -32,7 +32,7 @@ go build main.go
 SET CGO_ENABLED=0
 SET GOOS=linux
 SET GOARCH=amd64
-go build main.go
+go build -o myepg main.go
 ```
 ##### Mac下编译
 ```
@@ -56,8 +56,8 @@ After=memcached.service
 After=redis.service
 [Service]
 Type=simple
-ExecStart=/opt/mypeg/mypeg
-WorkingDirectory=/opt/mypeg
+ExecStart=/opt/myepg/myepg
+WorkingDirectory=/opt/myepg
 [Install]
 WantedBy=multi-user.target
 ```
