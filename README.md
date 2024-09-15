@@ -41,7 +41,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go
 # mac编译windows执行文件
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
 ```
-# linux做成服务
+### linux做成服务
 /etc/systemd/system/mypeg.service
 
 ```
