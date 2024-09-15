@@ -43,6 +43,5 @@ CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
 ```
 
 ### 问题
-- 程序性能差劲，还得学习优化
-- 有时候还会崩掉
-- 内存占用很大
+- 还得继续学习优化
+
