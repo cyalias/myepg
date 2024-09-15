@@ -3,10 +3,11 @@
 - 本人学习使用go写的本地epg api 
 - 本项目只是学习测试使用，不得商用，所有的法律责任与后果应由使用者自行承担
 #### 参考项目：
-- Meroser's IPTV: https://github.com/Meroser/IPTV
+- Meroser's IPTV: https://github.com/Meroser/IPTV   (作者已删除项目)
 
 #### 使用到的资源
 - EPG电子节目单: https://epg.erw.cc/
+- EPG电子节目单: https://epg.pw
 
 ### 使用
 根据需要使用的系统编译成指定的执行文件
@@ -67,4 +68,3 @@ systemctl enable mypeg.service
 
 ### 问题
 - 还得继续学习优化
-

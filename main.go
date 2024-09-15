@@ -16,5 +16,4 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServer:", err.Error())
 	}
-	//api.RedXml("e.xml")
 }
