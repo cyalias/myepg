@@ -27,8 +27,16 @@ type Epg_data struct {
 	Success  string     `json:"success"`
 }
 
+func ss(iso8601Time string) (s string) {
+	ss := iso8601Time
+	return ss[20:]
+}
+
 func iso8601_uni(iso8601Time string) (t string) {
-	result, err := time.ParseInLocation("2006-01-02T15:04:05+0800", iso8601Time, time.Local)
+	sf := "2006-01-02T15:04:05+" + ss(iso8601Time)
+	//fmt.Println(sf)
+	//result, err := time.ParseInLocation("2006-01-02T15:04:05+0000", iso8601Time, time.Local)
+	result, err := time.ParseInLocation(sf, iso8601Time, time.Local)
 	//如果错误则退出
 	if err != nil {
 		fmt.Println(err)
@@ -38,7 +46,9 @@ func iso8601_uni(iso8601Time string) (t string) {
 }
 
 func teshu(iso8601Time string) (t string) {
-	result, err := time.ParseInLocation("2006-01-02T15:04:05+0800", iso8601Time, time.Local)
+	sf := "2006-01-02T15:04:05+" + ss(iso8601Time)
+	result, err := time.ParseInLocation(sf, iso8601Time, time.Local)
+	//result, err := time.ParseInLocation("2006-01-02T15:04:05+0000", iso8601Time, time.Local)
 	//如果错误则退出
 	if err != nil {
 		fmt.Println(err)

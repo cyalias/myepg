@@ -141,9 +141,10 @@ func downloadxml(urlpath string) error {
 
 func do() {
 	c := cron.New()
-	c.AddFunc("0 0 * * *", func() {
-		downloadxml("https://e.erw.cc/e.xml")
-		RedXml("e.xml")
+	c.AddFunc("0 2 * * *", func() {
+		downloadxml("https://gitee.com/Black_crow/xmlgz/raw/master/all.xml")
+		//https://gitee.com/Black_crow/xmlgz/raw/master/e.xml
+		RedXml("all.xml")
 	})
 	c.Start()
 
@@ -151,5 +152,5 @@ func do() {
 
 func init() {
 	do()
-	RedXml("e.xml")
+	RedXml("all.xml")
 }
