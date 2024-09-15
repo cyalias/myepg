@@ -144,7 +144,7 @@ func do() {
 	urlpath := "https://epg.pw/xmltv/epg_CN.xml"
 	filename := path.Base(urlpath)
 	c := cron.New()
-	c.AddFunc("0 2 * * *", func() {
+	c.AddFunc("2 0 * * *", func() {
 		downloadxml(urlpath)
 		RedXml(filename)
 	})
