@@ -139,17 +139,21 @@ func downloadxml(urlpath string) error {
 	return nil
 }
 
-func do() {
-	urlpath := "https://e.erw.cc/all.xml"
-	//urlpath := "https://epg.pw/xmltv/epg_CN.xml"
-	//urlpath := "https://epg.mxdyeah.top/download/all-mxdyeah.xml"
-	filename := path.Base(urlpath)
+func do(urlpath, filename string) {
 	c := cron.New()
-	c.AddFunc("1 0,13 * * *", func() {
+	c.AddFunc("37 0,13 * * *", func() {
 		downloadxml(urlpath)
 		RedXml(filename)
 	})
 	c.Start()
+}
+
+func init() {
+	urlpath := "https://e.erw.cc/all.xml"
+	//urlpath := "https://epg.pw/xmltv/epg_CN.xml"
+	//urlpath := "https://epg.mxdyeah.top/download/all-mxdyeah.xml"
+	filename := path.Base(urlpath)
+	do(urlpath, filename)
 	if _, err := os.Stat(filename); err == nil {
 		fmt.Printf("File exists\n")
 		RedXml(filename)
@@ -158,8 +162,4 @@ func do() {
 		downloadxml(urlpath)
 		RedXml(filename)
 	}
-}
-
-func init() {
-	do()
 }
