@@ -141,7 +141,7 @@ func downloadxml(urlpath string) error {
 
 func do(urlpath, filename string) {
 	c := cron.New()
-	c.AddFunc("37 0,13 * * *", func() {
+	c.AddFunc("3 5,18 * * *", func() {
 		downloadxml(urlpath)
 		RedXml(filename)
 	})
