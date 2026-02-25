@@ -149,8 +149,8 @@ func do(urlpath, filename string) {
 }
 
 func init() {
-	urlpath := "https://e.erw.cc/all.xml"
-	//urlpath := "https://epg.pw/xmltv/epg_CN.xml"
+	//urlpath := "https://e.erw.cc/all.xml"
+	urlpath := "https://epg.pw/xmltv/epg_CN.xml"
 	//urlpath := "https://epg.mxdyeah.top/download/all-mxdyeah.xml"
 	filename := path.Base(urlpath)
 	do(urlpath, filename)
